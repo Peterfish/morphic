@@ -11,7 +11,7 @@ services:
       - NVIDIA_VISIBLE_DEVICES=0,1,2
       - CUDA_VISIBLE_DEVICES=0,1,2
       - KCPP_MODEL=/app/models/c4ai-command-a-03-2025-abliterated.i1-Q4_K_M.gguf
-      - KCPP_ARGS=--port 5001 --host 0.0.0.0 --usecublas all --contextsize 5192 --gpulayers 60 --threads 8 --multiuser --tensor_split 1 1 1 --password c7632a7c-2661-492e-bd6f-aab994818998
+      - KCPP_ARGS=--port 5001 --host 0.0.0.0 --usecublas all --contextsize 8192 --gpulayers 60 --threads 8 --multiuser --tensor_split 1 1 1 --password c7632a7c-2661-492e-bd6f-aab994818998
       - KCPP_DISABLE_TUNNEL=true
     volumes:
       - ./app/models:/app/models
