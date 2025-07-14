@@ -1,76 +1,55 @@
-# Morphic
+# Morphic - Custom Local AI Build
 
-An AI-powered search engine with a generative UI.
+An AI-powered search engine with a generative UI - **Configured for Local AI Models**
 
 ![capture](/public/screenshot-2025-05-04.png)
+
+## 🎯 About This Fork
+
+This is a customized version of [Morphic](https://github.com/miurla/morphic) configured to work exclusively with local AI models through OpenAI-compatible endpoints (like KoboldCpp). All cloud AI providers have been removed for a fully self-hosted experience.
+
+### Key Modifications
+- ✅ All models configured to use local AI endpoint
+- ✅ Interactive logo with eye-tracking mouse movement
+- ✅ Docker deployment optimized for local model usage
+- ✅ Removed dependency on cloud AI providers
 
 ## 🗂️ Overview
 
 - 🛠 [Features](#-features)
 - 🧱 [Stack](#-stack)
 - 🚀 [Quickstart](#-quickstart)
-- 🌐 [Deploy](#-deploy)
+- 🐳 [Docker Deployment](#-docker-deployment)
+- 🔧 [Building Custom Image](#-building-custom-image)
 - 🔎 [Search Engine](#-search-engine)
-- 💙 [Sponsors](#-sponsors)
-- 👥 [Contributing](#-contributing)
 - 📄 [License](#-license)
-
-📝 Explore AI-generated documentation on [DeepWiki](https://deepwiki.com/miurla/morphic)
 
 ## 🛠 Features
 
 ### Core Features
 
-- AI-powered search with GenerativeUI
+- AI-powered search with GenerativeUI using **local models**
 - Natural language question understanding
-- Multiple search providers support (Tavily, SearXNG, Exa)
-- Model selection from UI (switch between available AI models)
-  - Reasoning models with visible thought process
-
-### Authentication
-
-- User authentication powered by [Supabase Auth](https://supabase.com/docs/guides/auth)
-- Supports Email/Password sign-up and sign-in
-- Supports Social Login with Google
+- Multiple search providers support (Tavily, SearXNG)
+- Interactive logo with eye-tracking animation
+- Reasoning models with visible thought process
 
 ### Chat & History
 
-- Chat history functionality (Optional)
-- Share search results (Optional)
-- Redis support (Local/Upstash)
-
-### AI Providers
-
-The following AI providers are supported:
-
-- OpenAI (Default)
-- Google Generative AI
-- Azure OpenAI
-- Anthropic
-- Ollama
-- Groq
-- DeepSeek
-- Fireworks
-- xAI (Grok)
-- OpenAI Compatible
-
-Models are configured in `public/config/models.json`. Each model requires its corresponding API key to be set in the environment variables. See [Configuration Guide](docs/CONFIGURATION.md) for details.
+- Chat history functionality
+- Share search results
+- Redis support (Local/Docker)
 
 ### Search Capabilities
 
 - URL-specific search
-- Video search support (Optional)
+- Video search support
 - SearXNG integration with:
   - Customizable search depth (basic/advanced)
   - Configurable engines
   - Adjustable results limit
   - Safe search options
   - Custom time range filtering
-
-### Additional Features
-
-- Docker deployment ready
-- Browser search engine integration
 
 ## 🧱 Stack
 
@@ -80,22 +59,16 @@ Models are configured in `public/config/models.json`. Each model requires its co
 - [TypeScript](https://www.typescriptlang.org/) - Type safety
 - [Vercel AI SDK](https://sdk.vercel.ai/docs) - Text streaming / Generative UI
 
-### Authentication & Authorization (Updated Category)
-
-- [Supabase](https://supabase.com/) - User authentication and backend services
-
 ### AI & Search
 
-- [OpenAI](https://openai.com/) - Default AI provider (Optional: Google AI, Anthropic, Groq, Ollama, Azure OpenAI, DeepSeek, Fireworks)
+- **Local AI Model** via OpenAI-compatible endpoint
+- [KoboldCpp](https://github.com/LostRuins/koboldcpp) - Recommended local AI server
 - [Tavily AI](https://tavily.com/) - Default search provider
-- Alternative providers:
-  - [SearXNG](https://docs.searxng.org/) - Self-hosted search
-  - [Exa](https://exa.ai/) - Neural search
+- [SearXNG](https://docs.searxng.org/) - Self-hosted search alternative
 
 ### Data Storage
 
-- [Upstash](https://upstash.com/) - Serverless Redis
-- [Redis](https://redis.io/) - Local Redis option
+- [Redis](https://redis.io/) - Caching and session storage
 
 ### UI & Styling
 
@@ -106,121 +79,143 @@ Models are configured in `public/config/models.json`. Each model requires its co
 
 ## 🚀 Quickstart
 
-### 1. Fork and Clone repo
+### Prerequisites
 
-Fork the repo to your Github account, then run the following command to clone the repo:
+- Docker and Docker Compose installed
+- A local AI model server (KoboldCpp recommended)
+- Node.js 18+ and Bun (for development)
 
-```bash
-git clone git@github.com:[YOUR_GITHUB_ACCOUNT]/morphic.git
-```
-
-### 2. Install dependencies
+### 1. Clone this repository
 
 ```bash
-cd morphic
-bun install
+git clone https://github.com/Peterfish/morphic.git morphic-custom
+cd morphic-custom
 ```
 
-### 3. Configure environment variables
+### 2. Set up KoboldCpp (Local AI Server)
+
+```bash
+# Clone and build KoboldCpp
+git clone https://github.com/LostRuins/koboldcpp
+cd koboldcpp
+make
+
+# Run with your preferred model
+./koboldcpp --model path/to/your/model.gguf --port 5001
+```
+
+### 3. Configure environment
 
 ```bash
 cp .env.local.example .env.local
 ```
 
-Fill in the required environment variables in `.env.local`:
+Edit `.env.local`:
 
 ```bash
-# Required for Core Functionality
-OPENAI_API_KEY=     # Get from https://platform.openai.com/api-keys
-TAVILY_API_KEY=     # Get from https://app.tavily.com/home
+# Local AI Configuration
+OPENAI_COMPATIBLE_API_KEY=any-key-will-work
+OPENAI_COMPATIBLE_API_BASE_URL=http://localhost:5001/v1
+
+# Search Configuration
+TAVILY_API_KEY=your-tavily-api-key  # Get from https://app.tavily.com
+
+# Optional
+BASE_URL=http://localhost:3000
 ```
 
-For optional features configuration (Redis, SearXNG, etc.), see [CONFIGURATION.md](./docs/CONFIGURATION.md)
-
-### 4. Run app locally
-
-#### Using Bun
+### 4. Run with Docker Compose
 
 ```bash
-bun dev
+# Start all services
+docker compose up -d
+
+# Or if using separate KoboldCpp container
+docker compose up -d && docker compose -f docker-compose.kobold.yaml up -d
 ```
 
-#### Using Docker
+Visit http://localhost:3030 in your browser.
+
+## 🐳 Docker Deployment
+
+### Using Pre-built Image
 
 ```bash
+docker pull ghcr.io/Peterfish/morphic-custom:latest
+
+# Run with docker-compose
 docker compose up -d
 ```
 
-Visit http://localhost:3000 in your browser.
-
-## 🌐 Deploy
-
-Host your own live version of Morphic with Vercel, Cloudflare Pages, or Docker.
-
-### Vercel
-
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fmiurla%2Fmorphic&env=OPENAI_API_KEY,TAVILY_API_KEY,UPSTASH_REDIS_REST_URL,UPSTASH_REDIS_REST_TOKEN)
-
-### Docker Prebuilt Image
-
-Prebuilt Docker images are available on GitHub Container Registry:
-
-```bash
-docker pull ghcr.io/miurla/morphic:latest
-```
-
-You can use it with docker-compose:
+### docker-compose.yaml Configuration
 
 ```yaml
 services:
   morphic:
-    image: ghcr.io/miurla/morphic:latest
+    image: ghcr.io/Peterfish/morphic-custom:latest
     env_file: .env.local
     ports:
-      - '3000:3000'
-    volumes:
-      - ./models.json:/app/public/config/models.json # Optional: Override default model configuration
+      - '3030:3000'
+    depends_on:
+      - redis
+      - searxng
 ```
 
-The default model configuration is located at `public/config/models.json`. For Docker deployment, you can create `models.json` alongside `.env.local` to override the default configuration.
+## 🔧 Building Custom Image
+
+See [BUILD_CUSTOM_IMAGE.md](BUILD_CUSTOM_IMAGE.md) for detailed instructions on:
+
+- Modifying the codebase for your needs
+- Building your own Docker image
+- Pushing to GitHub Container Registry
+- Deploying your custom build
 
 ## 🔎 Search Engine
 
-### Setting up the Search Engine in Your Browser
+### Setting up Morphic as Default Search Engine
 
-If you want to use Morphic as a search engine in your browser, follow these steps:
+1. Open your browser settings
+2. Navigate to search engine settings
+3. Add new search engine:
+   - **Name**: Morphic Local
+   - **Keyword**: morphic
+   - **URL**: `http://localhost:3030/search?q=%s`
+4. Set as default search engine
 
-1. Open your browser settings.
-2. Navigate to the search engine settings section.
-3. Select "Manage search engines and site search".
-4. Under "Site search", click on "Add".
-5. Fill in the fields as follows:
-   - **Search engine**: Morphic
-   - **Shortcut**: morphic
-   - **URL with %s in place of query**: `https://morphic.sh/search?q=%s`
-6. Click "Add" to save the new search engine.
-7. Find "Morphic" in the list of site search, click on the three dots next to it, and select "Make default".
+## 🔍 Troubleshooting
 
-This will allow you to use Morphic as your default search engine in the browser.
+### Common Issues
 
-## 💙 Sponsors
+1. **Connection to AI model failed**
+   - Ensure KoboldCpp is running on port 5001
+   - Check `OPENAI_COMPATIBLE_API_BASE_URL` in `.env.local`
 
-This project is proudly supported by:
+2. **Search not working**
+   - Verify `TAVILY_API_KEY` is set correctly
+   - Check SearXNG container is running
 
-<a href="https://vercel.com/oss">
-  <img alt="Vercel OSS Program" src="https://vercel.com/oss/program-badge.svg" />
-</a>
+3. **Docker networking issues**
+   - Use container names for inter-container communication
+   - Example: `http://koboldcpp:5001/v1` instead of `localhost`
 
-## 👥 Contributing
+## 📝 Development
 
-We welcome contributions to Morphic! Whether it's bug reports, feature requests, or pull requests, all contributions are appreciated.
+```bash
+# Install dependencies
+bun install
 
-Please see our [Contributing Guide](CONTRIBUTING.md) for details on:
+# Run development server
+bun dev
 
-- How to submit issues
-- How to submit pull requests
-- Commit message conventions
-- Development setup
+# Build for production
+bun build
+```
+
+## 🙏 Credits
+
+- Original [Morphic](https://github.com/miurla/morphic) by [@miurla](https://github.com/miurla)
+- Built with [Vercel AI SDK](https://sdk.vercel.ai/)
+- Interactive logo inspired by classic animated eyes
 
 ## 📄 License
 
