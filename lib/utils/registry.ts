@@ -136,9 +136,9 @@ export function getToolCallModel(model?: string) {
         process.env.NEXT_PUBLIC_OLLAMA_TOOL_CALL_MODEL || modelName
       return getModel(`ollama:${ollamaModel}`)
     case 'google':
-      return getModel('google:gemini-2.0-flash')
+      return getModel('openai-compatible:local-model')
     default:
-      return getModel('openai:gpt-4o-mini')
+      return getModel('openai-compatible:local-model')
   }
 }
 
