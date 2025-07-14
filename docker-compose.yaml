@@ -3,7 +3,9 @@
 name: morphic-stack
 services:
   morphic:
-    image: ghcr.io/Peterfish/morphic-custom:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
     command: bun start -H 0.0.0.0
     env_file: .env.local
     ports:

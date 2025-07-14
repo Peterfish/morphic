@@ -37,3 +37,21 @@ next-env.d.ts
 
 # cursor
 .cursor/rules/private
+
+# Local AI models
+app/models/
+*.gguf
+
+# Redis data
+dump.rdb
+
+# IDE
+.vscode/
+.idea/
+
+# Logs
+logs/
+*.log
+
+# OS files
+Thumbs.db
